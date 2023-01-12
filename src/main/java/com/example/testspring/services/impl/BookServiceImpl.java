@@ -1,6 +1,6 @@
 package com.example.testspring.services.impl;
 
-import com.example.testspring.domain.Book;
+import com.example.testspring.domain.entities.Book;
 import com.example.testspring.exceptions.IncorrectIdException;
 import com.example.testspring.exceptions.OperationFailedException;
 import com.example.testspring.exceptions.ResourceNotFoundException;

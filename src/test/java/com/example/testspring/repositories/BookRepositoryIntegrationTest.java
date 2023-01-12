@@ -1,6 +1,6 @@
 package com.example.testspring.repositories;
 
-import com.example.testspring.domain.Book;
+import com.example.testspring.domain.entities.Book;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

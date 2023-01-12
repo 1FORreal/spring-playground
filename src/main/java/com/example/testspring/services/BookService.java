@@ -1,6 +1,6 @@
 package com.example.testspring.services;
 
-import com.example.testspring.domain.Book;
+import com.example.testspring.domain.entities.Book;
 
 import java.util.List;
 

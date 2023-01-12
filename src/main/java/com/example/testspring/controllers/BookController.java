@@ -1,13 +1,16 @@
 package com.example.testspring.controllers;
 
-import com.example.testspring.domain.Book;
+import com.example.testspring.domain.dtos.BookDto;
+import com.example.testspring.domain.entities.Book;
 import com.example.testspring.services.BookService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -15,41 +18,55 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
+    private final ModelMapper modelMapper;
 
     @GetMapping
-    public ResponseEntity<List<Book>> findAllBooks() {
-        return ResponseEntity
-                .ok(this.bookService.findAllBooks());
+    public ResponseEntity<List<BookDto>> findAllBooks() {
+        List<BookDto> bookDtos = new ArrayList<>();
+
+        this.bookService.findAllBooks().stream()
+                .forEach(book -> {
+                    BookDto bookDto = this.modelMapper.map(book, BookDto.class);
+                    bookDtos.add(bookDto);
+                });
+
+        return ResponseEntity.ok(bookDtos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Book> findBookById(
+    public ResponseEntity<BookDto> findBookById(
             @PathVariable Long id
     ) {
+        BookDto bookDto = this.modelMapper.map(this.bookService.findBookById(id), BookDto.class);
+
         return ResponseEntity
-                .ok(this.bookService.findBookById(id));
+                .ok(bookDto);
     }
 
     @PostMapping
-    public ResponseEntity<Book> createBook(
-            @RequestBody Book book
+    public ResponseEntity<BookDto> createBook(
+            @RequestBody BookDto bookDto
     ) {
-        Book savedBook = this.bookService.createBook(book);
+        Book toSave = this.modelMapper.map(bookDto, Book.class);
+
+        BookDto savedBookDto = this.modelMapper.map(this.bookService.createBook(toSave), BookDto.class);
 
         return ResponseEntity
-                .created(this.getLocation(savedBook.getId()))
-                .body(savedBook);
+                .created(this.getLocation(savedBookDto.getId()))
+                .body(savedBookDto);
     }
 
     @PutMapping
-    public ResponseEntity<Book> updateBook(
-            @RequestBody Book book
+    public ResponseEntity<BookDto> updateBook(
+            @RequestBody BookDto bookDto
     ) {
-        Book updatedBook = this.bookService.updateBook(book);
+        Book toUpdate = this.modelMapper.map(bookDto, Book.class);
+
+        BookDto updatedBookDto = this.modelMapper.map(this.bookService.updateBook(toUpdate), BookDto.class);
 
         return ResponseEntity
-                .created(this.getLocation(updatedBook.getId()))
-                .body(updatedBook);
+                .created(this.getLocation(toUpdate.getId()))
+                .body(updatedBookDto);
     }
 
     @DeleteMapping("/{id}")
