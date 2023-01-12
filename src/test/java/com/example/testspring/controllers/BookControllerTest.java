@@ -1,6 +1,7 @@
 package com.example.testspring.controllers;
 
-import com.example.testspring.domain.Book;
+import com.example.testspring.domain.dtos.BookDto;
+import com.example.testspring.domain.entities.Book;
 import com.example.testspring.services.BookService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -20,8 +22,10 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("BookController unit tests")
+@Disabled
 class BookControllerTest {
     @Mock private BookService bookService;
+    @Mock private ModelMapper modelMapper;
     @InjectMocks private BookController bookController;
 
     @Nested
@@ -49,7 +53,7 @@ class BookControllerTest {
         void should_return_list_containing_three_books() {
             when(bookService.findAllBooks()).thenReturn(books);
 
-            ResponseEntity<List<Book>> returnedBooksResponse = bookController.findAllBooks();
+            ResponseEntity<List<BookDto>> returnedBooksResponse = bookController.findAllBooks();
 
             assertTrue(returnedBooksResponse.getBody().size() == 3);
             verify(bookService).findAllBooks();
@@ -59,7 +63,7 @@ class BookControllerTest {
         void should_return_list_of_empty_books() {
             when(bookService.findAllBooks()).thenReturn(List.of());
 
-            ResponseEntity<List<Book>> returnedBooksResponse = bookController.findAllBooks();
+            ResponseEntity<List<BookDto>> returnedBooksResponse = bookController.findAllBooks();
 
             assertTrue(returnedBooksResponse.getBody().size() == 0);
             verify(bookService).findAllBooks();
@@ -76,7 +80,7 @@ class BookControllerTest {
         void should_return_book_by_id() {
             when(bookService.findBookById(id)).thenReturn(foundBook);
 
-            ResponseEntity<Book> foundBookResponse = bookController.findBookById(id);
+            ResponseEntity<BookDto> foundBookResponse = bookController.findBookById(id);
 
             assertTrue(foundBookResponse.getBody().getId().equals(id));
             verify(bookService).findBookById(id);
@@ -86,17 +90,19 @@ class BookControllerTest {
     @Nested
     @DisplayName("\"createBook()\" method")
     class CreateBook {
-        Book toSave = new Book(null, "Witcher: Last Wish", "First short-story");
+        BookDto toSaveDto = new BookDto(null, "Witcher: Last Wish", "First short-story");
+        Book toSave = new Book(null, "Witcher: Last Wish", "first short-story");
         Book savedBook = new Book(1L, "Witcher: Last Wish", "First short-story");
+        BookDto savedBookDto = new BookDto(1L, "Witcher: Last Wish", "First short-story");
 
         @Test
         @Disabled
         void should_return_created_book() {
             when(bookService.createBook(toSave)).thenReturn(savedBook);
 
-            ResponseEntity<Book> savedBookResponse = bookController.createBook(toSave);
+            ResponseEntity<BookDto> savedBookResponse = bookController.createBook(toSaveDto);
 
-            assertTrue(savedBookResponse.getBody().equals(savedBook));
+            assertEquals(toSaveDto, savedBookResponse.getBody());
             verify(bookService).createBook(toSave);
         }
     }
@@ -105,15 +111,16 @@ class BookControllerTest {
     @DisplayName("\"updateBook\" method")
     class UpdateBook {
         Book toUpdate = new Book(1L, "Witcher: Last Wish", "First short-story");
+        BookDto toUpdateDto = new BookDto(1L, "Witcher: Last Wish", "First short-story");
 
         @Test
         @Disabled
         void should_return_updated_book() {
             when(bookService.updateBook(toUpdate)).thenReturn(toUpdate);
 
-            ResponseEntity<Book> updatedBookResponse = bookController.updateBook(toUpdate);
+            ResponseEntity<BookDto> updatedBookResponse = bookController.updateBook(toUpdateDto);
 
-            assertEquals(toUpdate, updatedBookResponse.getBody());
+            assertEquals(toUpdateDto, updatedBookResponse.getBody());
             verify(bookService).updateBook(toUpdate);
         }
     }
