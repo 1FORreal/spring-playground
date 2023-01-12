@@ -3,6 +3,7 @@ package com.example.testspring.controllers;
 import com.example.testspring.domain.dtos.BookDto;
 import com.example.testspring.domain.entities.Book;
 import com.example.testspring.services.BookService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<BookDto> createBook(
-            @RequestBody BookDto bookDto
+            @Valid @RequestBody BookDto bookDto
     ) {
         Book toSave = this.modelMapper.map(bookDto, Book.class);
 
@@ -58,7 +59,7 @@ public class BookController {
 
     @PutMapping
     public ResponseEntity<BookDto> updateBook(
-            @RequestBody BookDto bookDto
+            @Valid @RequestBody BookDto bookDto
     ) {
         Book toUpdate = this.modelMapper.map(bookDto, Book.class);
 
