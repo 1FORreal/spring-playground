@@ -36,8 +36,13 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
+<<<<<<< HEAD
     public ResponseEntity<BookDto> findBookById(
             @PathVariable Long id
+=======
+    public ResponseEntity<Book> findBookById(
+            @PathVariable(name = "id") Long id
+>>>>>>> 97c69f49ab0a6cef2c35b6b14fae08bacdc78d6a
     ) {
         BookDto bookDto = this.modelMapper.map(this.bookService.findBookById(id), BookDto.class);
 
