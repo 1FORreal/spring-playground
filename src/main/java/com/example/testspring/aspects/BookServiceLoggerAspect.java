@@ -13,6 +13,7 @@ import java.util.List;
 @Component
 @Slf4j
 public class BookServiceLoggerAspect {
+
     @Around("execution(public * com.example.testspring.services.impl.BookServiceImpl.findAllBooks())")
     public List<Book> aroundFindAllBooks(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         List<Book> books = (List<Book>) proceedingJoinPoint.proceed();
