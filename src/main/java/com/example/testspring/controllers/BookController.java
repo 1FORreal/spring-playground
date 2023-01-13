@@ -2,6 +2,7 @@ package com.example.testspring.controllers;
 
 import com.example.testspring.domain.dtos.BookDto;
 import com.example.testspring.domain.entities.Book;
+import com.example.testspring.exceptions.ResourceNotFoundException;
 import com.example.testspring.services.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
