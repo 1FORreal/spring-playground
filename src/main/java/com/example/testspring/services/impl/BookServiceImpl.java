@@ -7,6 +7,10 @@ import com.example.testspring.exceptions.ResourceNotFoundException;
 import com.example.testspring.repositories.BookRepository;
 import com.example.testspring.services.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +24,17 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findAllBooks() {
         return this.bookRepository.findAll();
+    }
+
+    public List<Book> findAllBooksPaginated(
+            Integer page,
+            Integer size
+    ) {
+        Pageable bookPageRequest = PageRequest.of(page, size);
+
+        Page<Book> bookPageResponse = this.bookRepository.findAll(bookPageRequest);
+
+        return bookPageResponse.getContent();
     }
 
     @Override
