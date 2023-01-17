@@ -35,6 +35,22 @@ public class BookController {
         return ResponseEntity.ok(bookDtos);
     }
 
+    @GetMapping("/sorted")
+    public ResponseEntity<List<BookDto>> findAllBooksPaginated(
+            @RequestParam Integer page,
+            @RequestParam Integer size
+    ) {
+        List<BookDto> bookDtos = new ArrayList<>();
+
+        this.bookService.findAllBooksPaginated(page, size).stream()
+                .forEach(book -> {
+                    BookDto bookDto = this.modelMapper.map(book, BookDto.class);
+                    bookDtos.add(bookDto);
+                });
+
+        return ResponseEntity.ok(bookDtos);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<BookDto> findBookById(
             @PathVariable Long id
