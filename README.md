@@ -1,4 +1,4 @@
-# spring-playground
+# Spring playground
 
 This repository contains a web appliction build in Java with Spring. It is a personal project for:
 
